@@ -6,20 +6,25 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 sh '''
-                    npm ci
-		    npm test
+                    docker run --rm \
+                        -v "$WORKSPACE":/app \
+                        -v /app/node_modules \
+                        -w /app \
+                        node:20-bookworm \
+                        sh -c "npm ci && npm test"
                 '''
             }
         }
 
         stage('Build') {
             steps {
-                sh '''                   
-		DOCKER_BUILDKIT=0 docker build \
-		  --pull \
-		  --rm \
-		  -t blog:latest .
-		'''
+                sh '''
+                    docker build \
+                        --pull \
+                        --rm \
+                        -f Dockerfile \
+                        -t blog:latest .
+                '''
             }
         }
 
@@ -76,4 +81,3 @@ pipeline {
         }
     }
 }
-           
