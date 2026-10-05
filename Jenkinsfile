@@ -11,7 +11,7 @@ pipeline {
                         -v /app/node_modules \
                         -w /app \
                         node:20-bookworm \
-                        sh -c "npm ci && npm test"
+                        sh -c "npm ci --no-audit --no-fund && npm test"
                 '''
             }
         }
