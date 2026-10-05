@@ -10,7 +10,7 @@ pipeline {
                         -v "$WORKSPACE":/app \
                         -v /app/node_modules \
                         -w /app \
-                        node:20-bookworm \
+                        node:18-bookworm \
                         sh -c "npm ci && npm test"
                 '''
             }
@@ -18,13 +18,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '''
-                    docker build \
-                        --pull \
-                        --rm \
-                        -f Dockerfile \
-                        -t blog:latest .
-                '''
+                sh '''                   
+		DOCKER_BUILDKIT=0 docker build \
+  		  --pull \
+  		  --rm \
+  		  -t blog:latest .
+		'''
             }
         }
 
