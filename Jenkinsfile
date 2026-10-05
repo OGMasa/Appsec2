@@ -6,12 +6,8 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 sh '''
-                    docker run --rm \
-                        -v "$WORKSPACE":/app \
-                        -v /app/node_modules \
-                        -w /app \
-                        node:18-bookworm \
-                        sh -c "npm ci && npm test"
+                    npm ci
+		    npm test
                 '''
             }
         }
@@ -20,9 +16,9 @@ pipeline {
             steps {
                 sh '''                   
 		DOCKER_BUILDKIT=0 docker build \
-  		  --pull \
-  		  --rm \
-  		  -t blog:latest .
+		  --pull \
+		  --rm \
+		  -t blog:latest .
 		'''
             }
         }
