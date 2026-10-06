@@ -6,12 +6,12 @@ pipeline {
         stage('Unit Tests') {
             steps {
 		sh '''
-		    docker run --rm \
-                        -v "$WORKSPACE":/app \
-                        -v /app/node_modules \
-                        -w /app \
-                        node:20-bookworm \
-                        sh -c "npm ci --no-audit --no-fund && npm test"
+		  docker run --rm \
+		  -v "$WORKSPACE":/app \
+		  -v /app/node_modules \
+		  -w /app \
+		  node:22-bookworm \
+		  sh -c "npm ci && npm test"
                 '''
             }
         }
