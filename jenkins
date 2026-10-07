@@ -1,12 +1,12 @@
 Build
 
-    44s
-    Aloitettiin 1min sitten
+    2s
+    Aloitettiin 5s sitten
     Jenkins
     More actions
 
 DOCKER_BUILDKIT=0 docker build --pull --rm -f Dockerfile -t blog:latest .
-44s
+2s
 
 + DOCKER_BUILDKIT=0 docker build --pull --rm -f Dockerfile -t blog:latest .
 
@@ -16,7 +16,7 @@ DEPRECATED: The legacy builder is deprecated and will be removed in a future rel
 
             environment-variable.
 
-Sending build context to Docker daemon  343.6kB
+Sending build context to Docker daemon  347.1kB
 
 Step 1/16 : FROM node:22-alpine
 
@@ -48,93 +48,13 @@ Step 4/16 : COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", 
 
 Step 5/16 : RUN apk add python3 py3-pip build-base
 
- ---> Running in 706b9566f4ca
-
-( 1/37) Installing jansson (2.15.0-r0)
-
-( 2/37) Installing zstd-libs (1.5.7-r2)
-
-( 3/37) Installing binutils (2.45.1-r1)
-
-( 4/37) Installing libmagic (5.47-r2)
-
-( 5/37) Installing file (5.47-r2)
-
-( 6/37) Installing libgcc-static (15.2.0-r5)
-
-( 7/37) Installing libgomp (15.2.0-r5)
-
-( 8/37) Installing libatomic (15.2.0-r5)
-
-( 9/37) Installing gmp (6.3.0-r4)
-
-(10/37) Installing isl26 (0.26-r2)
-
-(11/37) Installing mpfr4 (4.2.2-r0)
-
-(12/37) Installing mpc1 (1.3.1-r1)
-
-(13/37) Installing gcc (15.2.0-r5)
-
-(14/37) Installing libstdc++-dev (15.2.0-r5)
-
-(15/37) Installing musl-dev (1.2.6-r2)
-
-(16/37) Installing g++ (15.2.0-r5)
-
-(17/37) Installing make (4.4.1-r4)
-
-(18/37) Installing fortify-headers (3.0.1-r2)
-
-(19/37) Installing patch (2.8-r0)
-
-(20/37) Installing build-base (0.5-r4)
-
-(21/37) Installing libexpat (2.8.5-r0)
-
-(22/37) Installing libbz2 (1.0.8-r6)
-
-(23/37) Installing libffi (3.5.2-r1)
-
-(24/37) Installing gdbm (1.26-r0)
-
-(25/37) Installing xz-libs (5.8.4-r0)
-
-(26/37) Installing mpdecimal (4.0.1-r0)
-
-(27/37) Installing ncurses-terminfo-base (6.6_p20260516-r0)
-
-(28/37) Installing libncursesw (6.6_p20260516-r0)
-
-(29/37) Installing libpanelw (6.6_p20260516-r0)
-
-(30/37) Installing readline (8.3.3-r1)
-
-(31/37) Installing sqlite-libs (3.53.4-r0)
-
-(32/37) Installing python3 (3.14.8-r0)
-
-(33/37) Installing python3-pycache-pyc0 (3.14.8-r0)
-
-(34/37) Installing pyc (3.14.8-r0)
-
-(35/37) Installing py3-pip-pyc (26.1.2-r0)
-
-(36/37) Installing python3-pyc (3.14.8-r0)
-
-(37/37) Installing py3-pip (26.1.2-r0)
-
-Executing busybox-1.37.0-r31.trigger
-
-OK: 323.0 MiB in 55 packages
-
- ---> Removed intermediate container 706b9566f4ca
+ ---> Using cache
 
  ---> b4bc22ae831e
 
 Step 6/16 : RUN npm install --omit=dev && mv node_modules ../
 
- ---> Running in 9a202a0e404d
+ ---> Running in c3389c7d07a7
 
 Killed
 
