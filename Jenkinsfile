@@ -5,13 +5,18 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-		sh '''
-		  docker run --rm \
-		  -v "$WORKSPACE":/app \
-		  -v /app/node_modules \
-		  -w /app \
-		  node:22-bookworm \
-		  sh -c "npm ci && npm test"
+                sh '''
+                    echo "Node version:"
+                    node --version
+
+                    echo "NPM version:"
+                    npm --version
+
+                    echo "Installing dependencies..."
+                    npm ci
+
+                    echo "Running tests..."
+                    npm test
                 '''
             }
         }
@@ -37,6 +42,9 @@ pipeline {
                         --format table \
                         --output "$WORKSPACE/trivy-report.txt" \
                         blog:latest
+
+                    echo "Trivy scan completed."
+                    cat "$WORKSPACE/trivy-report.txt"
                 '''
             }
         }
@@ -61,11 +69,14 @@ pipeline {
                     docker rm blog || true
 
                     docker run -d \
-                        -p 3000:3000 \
                         --name blog \
+                        -p 3000:3000 \
                         blog:latest
 
+                    echo "Waiting for application..."
                     sleep 5
+
+                    docker ps
                 '''
             }
         }
@@ -73,11 +84,29 @@ pipeline {
         stage('Nikto Scan') {
             steps {
                 sh '''
-                    docker run --rm --network host \
+                    docker run --rm \
+                        --network host \
                         sullo/nikto \
                         -h http://127.0.0.1:3000
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+                docker stop blog 2>/dev/null || true
+                docker rm blog 2>/dev/null || true
+            '''
+        }
+
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+
+        failure {
+            echo 'Pipeline failed. Check the stage that reported the error.'
         }
     }
 }
