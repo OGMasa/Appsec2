@@ -5,7 +5,6 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-		deleteDir()
 
                 sh '''
                     echo "Node version:"
@@ -26,7 +25,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    docker build \
+                    DOCKER_BUILDKIT=0 docker build \
                         --pull \
                         --rm \
                         -f Dockerfile \
