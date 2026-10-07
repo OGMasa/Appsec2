@@ -5,15 +5,14 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
+		deleteDir()
+
                 sh '''
                     echo "Node version:"
                     node --version
 
                     echo "NPM version:"
                     npm --version
-
-                    echo "Removing old node_modules..."
-                    rm -rf node_modules
 
                     echo "Installing dependencies..."
                     npm ci
