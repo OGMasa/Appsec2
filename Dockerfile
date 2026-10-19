@@ -1,5 +1,5 @@
 FROM node:20-alpine
-ENV NODE_ENV=production
+ENV NODE_ENV=debug
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN apk add python3 py3-pip build-base
