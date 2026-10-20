@@ -55,7 +55,7 @@ pipeline {
             steps {
                 dependencyCheck(
                     odcInstallation: 'OWASP-DC',
-                    additionalArguments: '--scan .'
+                    additionalArguments: '--scan . --format XML --out dependency-check-report.xml'
                 )
 
                 dependencyCheckPublisher(
@@ -88,7 +88,7 @@ pipeline {
                 sh '''
                     docker run --rm \
                         --network host \
-                        sullo/nikto \
+                        hackllc/nikto:latest \
                         -h http://127.0.0.1:3000
                 '''
             }
