@@ -55,7 +55,6 @@ pipeline {
             steps {
                 dependencyCheck(
                     odcInstallation: 'OWASP-DC',
-		    nvdCredentialsId: 'nvd-api-key',
                     additionalArguments: '--scan .'
                 )
 
