@@ -2,35 +2,24 @@ pipeline {
     agent any
 
     stages {
-
         stage('Unit Tests') {
             steps {
-
                 sh '''
-                    echo "Node version:"
-                    node --version
-
-                    echo "NPM version:"
-                    npm --version
-
-                    echo "Installing dependencies..."
-                    npm ci
-
-                    echo "Running tests..."
-                    npm test
+                    docker run --rm \
+			-u "$(id -u):$(id -g)" \
+			-e HOME=/tmp \
+                        -v "$WORKSPACE":/app \
+                        -v /app/node_modules \
+                        -w /app \
+                        node:20-bookworm \
+                        sh -c "npm ci && npm test"
                 '''
             }
         }
 
         stage('Build') {
             steps {
-                sh '''
-                    DOCKER_BUILDKIT=0 docker build \
-                        --pull \
-                        --rm \
-                        -f Dockerfile \
-                        -t blog:latest .
-                '''
+                sh 'docker build --pull --rm -f "Dockerfile" -t blog:latest "."'
             }
         }
 
@@ -40,13 +29,9 @@ pipeline {
                     rm -f "$WORKSPACE/trivy-report.txt"
 
                     trivy image \
-			--timeout 15m \
                         --format table \
                         --output "$WORKSPACE/trivy-report.txt" \
                         blog:latest
-
-                    echo "Trivy scan completed."
-                    cat "$WORKSPACE/trivy-report.txt"
                 '''
             }
         }
@@ -66,49 +51,22 @@ pipeline {
 
         stage('Run') {
             steps {
-                sh '''
-                    docker stop blog || true
-                    docker rm blog || true
-
-                    docker run -d \
-                        --name blog \
-                        -p 3000:3000 \
-                        blog:latest
-
-                    echo "Waiting for application..."
-                    sleep 5
-
-                    docker ps
-                '''
+                sh 'docker stop blog || true'
+                sh 'docker rm blog || true'
+                sh 'docker run -d -p 3000:3000 --name blog blog'
+                sh 'sleep 5'
             }
         }
 
         stage('Nikto Scan') {
             steps {
                 sh '''
-                    docker run --rm \
-                        --network host \
-                        hackllc/nikto:latest \
+                    docker run --rm --network host \
+                        hackllc/nikto \
                         -h http://127.0.0.1:3000
                 '''
             }
         }
     }
-
-    post {
-        always {
-            sh '''
-                docker stop blog 2>/dev/null || true
-                docker rm blog 2>/dev/null || true
-            '''
-        }
-
-        success {
-            echo 'Pipeline completed successfully.'
-        }
-
-        failure {
-            echo 'Pipeline failed. Check the stage that reported the error.'
-        }
-    }
 }
+
